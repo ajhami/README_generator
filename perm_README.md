@@ -6,7 +6,7 @@ https://img.shields.io/badge/status-incomplete-red
 ​
 Place gif here
 ​
-[Status Badge](https://img.shields.io/badge/status-incomplete-red)
+[Status Badge](https://img.shields.io/badge/status-incomplete-red.png)
 
 
 
