@@ -1,6 +1,5 @@
 # README Generator
-## University of Utah Fullstack Development
-### April 27th, 2020
+## University of Utah Fullstack Development - April 27th, 2020
 
 
 
