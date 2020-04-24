@@ -32,9 +32,47 @@ function InputPrompt(name, message) {
     ])};
 }
 
+function ListPrompt(name, message, choices, type) {
+    this.name = name,
+    this.message = message,
+    this.choices = choices,
+    this.type = type,
+    this.ask = function() {
+        return inquirer.prompt([
+        {
+          type: this.type,
+          name: this.name,
+          message: this.message,
+          choices: this.choices
+        }
+    ])};
+}
 
-const nameInput = new InputPrompt("name", "What is your name?");
+// Input Prompts
+const projectNameInput = new InputPrompt("projectName", "What is the name of your project?");
+const licenseInput = new InputPrompt("license", "Please input the license you'd like to use: ");
+const descriptionInput = new InputPrompt("description", "Please enter a description of your project.");
+const addQuestionInput = new InputPrompt("question", "Q:");
+const addAnswerInput = new InputPrompt("answer", "A:");
+const addContributorInput = new InputPrompt("name", "Contributor name:");
+const addContributionInput = new InputPrompt("description", "Contribution to project:");
 
+// List Prompts Options
+const statuses = ["Incomplete", "In Progress", "Ready"];
+const licenses = ["mit", "apache", "zlib", "gpl", "wtfpl", "other", "none"];
+const contentSelections = ["Installation", "Usage", "Contributors", "Tests", "FAQ"];
+const yesOrNo = ["YES", "no"];
+const yesPleaseOrNo = ["Yes, please!", "I'm good, thanks!"];
+
+
+// List Prompts
+const statusList = new ListPrompt("status", "Where is your project currently?", statuses, "list");
+const licenseList = new ListPrompt("license", "What license would you like to use for this project?", licenses, "list");
+const contentSelectionList = new ListPrompt("contents", "What elements would you like to include in your README.md?", contentSelections, "checkbox");
+const addContributorList = new ListPrompt("response", "Would you like to add a contributor to this project?", yesOrNo, "list");
+const addAnotherContributorList = new ListPrompt("response", "Would you like to add another contributor", yesPleaseOrNo, "list");
+const addFAQList = new ListPrompt("response", "Would you like to add FAQs to this README.md?", yesOrNo, "list");
+const addAnotherFAQList = new ListPrompt("response", "Would you like to add another FAQ?", yesPleaseOrNo, "list");
 
 
 // init function
@@ -42,12 +80,126 @@ async function init() {
 
     try {
         console.log(`
-        Welcome to the README.md Generator!
+        
+
+Welcome to the README.md Generator!
         
         `);
 
-        const userName = await nameInput.ask();
-        console.log("Sucess! User's Name = ", userName.name);
+
+        // PROJECT NAME
+        let userProjectName = await projectNameInput.ask();
+        console.log(userProjectName.projectName);
+
+        // Assuring that the user inputs a project name
+        while(userProjectName.projectName === "") {
+            console.log("Please enter a valid project project name!\n");
+            userProjectName = await projectNameInput.ask();
+        }
+        // await appendNameLine(userProjectName.projectName);
+
+
+        // STATUS
+        const userStatus = await statusList.ask();
+        console.log("Status = ", userStatus.status);
+        // await appendStatusLine(userStatus.status);
+
+
+        // DESCRIPTION
+        const userDescription = await descriptionInput.ask();
+        console.log("Description = ", userDescription.description);
+        if(userDescription.description != "") {
+            console.log("Description found!");
+            // await appendDescriptionLines(userDescription.description);
+        }
+
+
+        // LICENSE
+        const userLicense = await licenseList.ask();
+
+        if(userLicense.license === "none") {
+            console.log("User selects to not use a license");
+            console.log("Success!\nUser's project name = ", userProjectName.projectName);
+        }
+        else if(userLicense.license === "other") {
+            const otherLicense = await licenseInput.ask();
+            if(otherLicense.license != "") {
+                console.log("User inputs a license");
+                // await appendLicenseLine(otherLicense.license);
+            }
+            console.log("Success!\nUser's project name = ", userProjectName.projectName);
+            console.log("License = ", otherLicense.license);
+        }
+        else {
+            // await appendLicenseLine(userLicense.license);
+            console.log("Success!\nUser's project name = ", userProjectName.projectName);
+            console.log("License = ", userLicense.license);
+        }
+
+
+        // Table of Contents
+        const tableOfContents = await contentSelectionList.ask();
+        console.log("table of contents", tableOfContents.contents);
+        if(tableOfContents.contents.length > 0) {
+            console.log("Contents selected! Count = ", tableOfContents.contents.length);
+            // appendTOCLines(tableOfContents.contents);
+        }
+
+
+        ["Installation", "Usage", "Contributors", "Tests", "FAQ"]
+        // INSTALLATION
+
+
+        // USAGE
+
+
+        // CONTRIBUTORS
+        const contributorName = [];
+        const contribution = [];
+
+        let addContributor = await addContributorList.ask();
+
+        if(addContributor.response === "YES") {
+            while(addContributor.response != "I'm good, thanks!"){
+                let addName = await addContributorInput.ask();
+                contributorName.push(addName.name);
+                let addDescription = await addContributionInput.ask();
+                contribution.push(addDescription.description);
+
+                addContributor = await addAnotherContributorList.ask();
+            }
+
+            console.log("Contributors properly saved!");
+            console.log("Contributors = ", contributorName);
+            console.log("Contributions = ", contribution);
+            // await appendContributorsLines(contributorName, contribution);
+
+        }
+        
+        // TESTS
+
+
+        // FAQ
+        const questions = [];
+        const answers = [];
+
+        let addFAQ = await addFAQList.ask();
+
+        if(addFAQ.response === "YES") {
+            while(addFAQ.response != "I'm good, thanks!"){
+                let addQuestion = await addQuestionInput.ask();
+                questions.push(addQuestion.question);
+                let addAnswer = await addAnswerInput.ask();
+                answers.push(addAnswer.answer);
+
+                addFAQ = await addAnotherFAQList.ask();
+            }
+
+            console.log("Questions and Answers properly saved!");
+            console.log("Questions = ", questions);
+            console.log("answers = ", answers);
+            // await appendFAQLines(questions, answers);
+        }
 
 
     } catch(err) {
