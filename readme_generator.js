@@ -17,18 +17,19 @@ const axios = require("axios");
 const writeFileAsync = util.promisify(fs.writeFile);
 const appendFileAsync = util.promisify(fs.appendFile);
 
-// Initializing our program with init function
-init();
 
-// inquirer functions
-function InputPrompt(title, question) {
-  return inquirer.prompt([
-    {
-      type: "input",
-      name: title,
-      message: question
-    }
-  ]);
+// inquirer constructors
+function InputPrompt(name, message) {
+    this.name = name,
+    this.message = message,
+    this.ask = function() {
+        return inquirer.prompt([
+        {
+          type: "input",
+          name: this.name,
+          message: this.message
+        }
+    ])};
 }
 
 
@@ -45,8 +46,8 @@ async function init() {
         
         `);
 
-        const userName = nameInput();
-        console.log(userName);
+        const userName = await nameInput.ask();
+        console.log("Sucess! User's Name = ", userName.name);
 
 
     } catch(err) {
@@ -54,7 +55,8 @@ async function init() {
     }
   }
 
-
+// Initializing our program with init function
+init();
 
 
 
