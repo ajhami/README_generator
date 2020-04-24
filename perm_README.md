@@ -1,5 +1,6 @@
-# README Generator![Status Badge]
+# README Generator
 ![Project Status](https://img.shields.io/badge/status-incomplete-red)
+![License](https://img.shields.io/badge/License-wtfpl-blue)
 ​
 ## University of Utah Fullstack Development - April 27th, 2020
 ​
