@@ -61,6 +61,8 @@ const testInput = new InputPrompt("instructions", "Input a test instruction bloc
 const testEnvironmentInput = new InputPrompt("environment", "Enter your test environment:");
 const addQuestionInput = new InputPrompt("question", "Q:");
 const addAnswerInput = new InputPrompt("answer", "A:");
+const getUserNameInput = new InputPrompt("name", "What is your name?");
+const getUserGitHubInput = new InputPrompt("username", "Provide GitHub username here:")
 
 // Arrays of List Prompt Choices
 const statuses = ["Incomplete", "In Progress", "Ready"];
@@ -69,18 +71,20 @@ const contentSelections = ["Installation", "Usage", "Contributors", "Tests", "FA
 const programingLanguages = ["git", "other"];
 const yesOrNoThankYou = ["YES", "No, thank you."];
 const yesPleaseOrNo = ["Yes, please!", "I'm good, thanks!"];
+const yesOrPleaseNo = ["Sure!", "Please no, I wanna go home!"];
 
 
 // List Prompts
-const statusList = new ListPrompt("status", "Where is your project currently?", statuses, "list");
+const statusList = new ListPrompt("status", "What is the status of your project currently?", statuses, "list");
 const licenseList = new ListPrompt("license", "What license would you like to use for this project?", licenses, "list");
 const contentSelectionList = new ListPrompt("contents", "What elements would you like to include in your README.md?", contentSelections, "checkbox");
-const installEnvironmentList = new ListPrompt("environment", "Select and installation environment.", programingLanguages, "list");
+const installEnvironmentList = new ListPrompt("environment", "Select an installation environment.", programingLanguages, "list");
 const addInstallBlocksList = new ListPrompt("response", "Would you like to add another block of installation instructions?", yesPleaseOrNo, "list");
 const addContributorList = new ListPrompt("response", "Would you like to add another contributor", yesOrNoThankYou, "list");
-const testEnvironmentList = new ListPrompt("environment", "Select and installation environment.", programingLanguages, "list");
+const testEnvironmentList = new ListPrompt("environment", "Select a test environment.", programingLanguages, "list");
 const addTestBlocksList = new ListPrompt("response", "Would you like to add another block of installation instructions?", yesPleaseOrNo, "list");
 const addFAQList = new ListPrompt("response", "Would you like to add another FAQ?", yesPleaseOrNo, "list");
+const addUserGitHubList = new ListPrompt("response", "Would you like to provide your GitHub username?", yesOrPleaseNo, "list");
 
 
 // README Text Input Functions
@@ -169,6 +173,15 @@ faqSection = (questions, answers) => {
     return faqText;
 }
 
+copyrightSection = (name, github) => {
+    return `
+
+*© 2020 ${github} - ${name}. All Rights Reserved.*`
+}
+
+
+
+
 // init function
 async function init() {
 
@@ -179,8 +192,7 @@ async function init() {
 
         // PROJECT NAME
         let userProjectName = await projectNameInput.ask();
-        console.log(userProjectName.projectName);
-
+        
         // Assuring that the user inputs a project name
         while(userProjectName.projectName === "") {
             console.log("Please enter a valid project project name!\n");
@@ -188,45 +200,31 @@ async function init() {
         }
 
         const writeProjectName = projectNameLine(userProjectName.projectName);
-        console.log("WriteProjectName = ", writeProjectName);
-
         await writeFileAsync("README.md", writeProjectName);
-        // await appendNameLine(userProjectName.projectName);
-
+        
 
         // STATUS
         const userStatus = await statusList.ask();
-        console.log("Status = ", userStatus.status);
-        // await appendStatusLine(userStatus.status);
         const writeProjectStatus = projectStatusBadge(userStatus.status);
         console.log("WriteProjectStatus = ", writeProjectStatus);
-
         await appendFileAsync("README.md", writeProjectStatus);
 
 
         // LICENSE
         const userLicense = await licenseList.ask();
-
         let writeProjectLicense = "";
 
         if(userLicense.license === "none") {
-            console.log("User selects to not use a license");
-            console.log("Success!\nUser's project name = ", userProjectName.projectName);
+            return;
         }
         else if(userLicense.license === "other") {
             const otherLicense = await licenseInput.ask();
             if(otherLicense.license != "") {
-                console.log("User inputs a license");
                 writeProjectLicense = projectLicenseBadge(otherLicense.license);
                 await appendFileAsync("README.md", writeProjectLicense);
             }
-            console.log("Success!\nUser's project name = ", userProjectName.projectName);
-            console.log("License = ", otherLicense.license);
         }
         else {
-            // await appendLicenseLine(userLicense.license);
-            console.log("Success!\nUser's project name = ", userProjectName.projectName);
-            console.log("License = ", userLicense.license);
             writeProjectLicense = projectLicenseBadge(userLicense.license);
             await appendFileAsync("README.md", writeProjectLicense);
         }
@@ -234,9 +232,7 @@ async function init() {
 
         // DESCRIPTION
         const userDescription = await descriptionInput.ask();
-        console.log("Description = ", userDescription.description);
         if(userDescription.description != "") {
-            console.log("Description found!");
             const writeProjectDescription = projectDescriptionLines(userDescription.description);
             await appendFileAsync("README.md", writeProjectDescription);
         }
@@ -245,8 +241,9 @@ async function init() {
         // TABLE OF CONTENTS
         console.log("\x1b[34m%s\x1b[0m", "\n\nTable Of Contents");
         console.log("\x1b[36m%s\x1b[0m", "Now you have the chance to pick which additional\nelements you would like to add to your project README!\n");
+        
         const tableOfContents = await contentSelectionList.ask();
-        console.log("table of contents", tableOfContents.contents);
+        
         if(tableOfContents.contents.length > 0) {
             const writeTableOfContents = tableOfContentsSection(tableOfContents.contents);
             await appendFileAsync("README.md", writeTableOfContents);
@@ -257,10 +254,10 @@ async function init() {
         if(tableOfContents.contents.indexOf(contentSelections[0]) >= 0) {
             console.log("\x1b[34m%s\x1b[0m", "\n\nINSTALLATION");
             console.log("\x1b[36m%s\x1b[0m", "Provide other users with the proper\ninstallation instructions to run your project\n");
+        
             const installSelect = await installEnvironmentList.ask();
             let installEnvironment = installSelect.environment;
-            console.log("install environment = ", installEnvironment);
-    
+        
             if(installEnvironment === "other") {
                 const installInput = await installEnvironmentInput.ask();
                 installEnvironment = installInput.environment;
@@ -279,7 +276,6 @@ async function init() {
             if(installationBlocks.length > 0) {
                 const writeInstallBlocks = installationLines(installEnvironment, installationBlocks);
                 await appendFileAsync("README.md", writeInstallBlocks);
-                // await appendInstallationLines(installationBlocks);
             }
         }
 
@@ -288,8 +284,8 @@ async function init() {
         if(tableOfContents.contents.indexOf(contentSelections[1]) >= 0) {
             console.log("\x1b[34m%s\x1b[0m", "\n\nUSAGE");
             console.log("\x1b[36m%s\x1b[0m", "The usage section will help users understand the practical execution of your application.\n");
+        
             const usageDescription = await usageInput.ask();
-            console.log("Usage = ", usageDescription.instructions);
             const writeUsage = projectUsageLines(usageDescription.instructions);
             await appendFileAsync("README.md", writeUsage);
         }
@@ -313,14 +309,9 @@ async function init() {
     
                 addContributor = await addContributorList.ask();
             }
-    
-            console.log("Contributors properly saved!");
-            console.log("Contributors = ", contributorName);
-            console.log("Contributions = ", contribution);
-            
+        
             const contributorsLines = contributorsSection(contributorName, contribution);
             await appendFileAsync("README.md", contributorsLines);
-            // await appendContributorsLines(contributorName, contribution);
         }
 
 
@@ -328,9 +319,9 @@ async function init() {
         if(tableOfContents.contents.indexOf(contentSelections[3]) >= 0) {
             console.log("\x1b[34m%s\x1b[0m", "\n\nTESTS");
             console.log("\x1b[36m%s\x1b[0m", "Provide other users with the proper\n instructions for running tests on your project\n");
+    
             const testSelect = await testEnvironmentList.ask();
             let testEnvironment = testSelect.environment;
-            console.log("test environment = ", testEnvironment);
     
             if(testEnvironment === "other") {
                 const testInput = await testEnvironmentInput.ask();
@@ -348,11 +339,8 @@ async function init() {
             }
     
             if(testBlocks.length > 0) {
-                console.log("Test instructions recorded!");
-                console.log("test = ", testBlocks);
                 const testText = testLines(testEnvironment, testBlocks);
                 await appendFileAsync("README.md", testText);
-                // await appendTestLines(testBlocks);
             }
         }
 
@@ -376,15 +364,28 @@ async function init() {
                 addFAQ = await addFAQList.ask();
             }
     
-            console.log("Questions and Answers properly saved!");
-            console.log("Questions = ", questions);
-            console.log("answers = ", answers);
-
             const faqLines = faqSection(questions, answers);
             await appendFileAsync("README.md", faqLines);
-            // await appendFAQLines(questions, answers);
         }
 
+        // FINAL TOUCHES
+        console.log("\x1b[34m%s\x1b[0m", "\n\nYou're almost there!");
+        console.log("\x1b[36m%s\x1b[0m", "Answer just a couple quick questions while we prepare your new README.");
+
+        const usersName = await getUserNameInput.ask();
+        const addGithub = await addUserGitHubList.ask();
+        let githubName = "";
+    
+        if(addGithub.response === "Sure!") {
+            const getGitHub = await getUserGitHubInput.ask();
+            githubName = getGitHub.username;
+        }
+
+        const writecopyright = copyrightSection(usersName.name, githubName);
+        await appendFileAsync("README.md", writecopyright);
+
+        console.log("\x1b[32m%s\x1b[0m", "\n\nYour README.md is ready!");
+        
 
 
     } catch(err) {
@@ -396,91 +397,3 @@ async function init() {
 init();
 
 
-
-
-
-
-
-
-
-
-// Example from previous assignments
-// const writeFileAsync = util.promisify(fs.writeFile);
-
-// function promptUser() {
-//   return inquirer.prompt([
-//     {
-//       type: "input",
-//       name: "name",
-//       message: "What is your name?"
-//     },
-//     {
-//       type: "input",
-//       name: "location",
-//       message: "Where are you from?"
-//     },
-//     {
-//       type: "input",
-//       name: "hobby",
-//       message: "What is your favorite hobby?"
-//     },
-//     {
-//       type: "input",
-//       name: "food",
-//       message: "What is your favorite food?"
-//     },
-//     {
-//       type: "input",
-//       name: "github",
-//       message: "Enter your GitHub Username"
-//     },
-//     {
-//       type: "input",
-//       name: "linkedin",
-//       message: "Enter your LinkedIn URL."
-//     }
-//   ]);
-// }
-
-// function generateHTML(answers) {
-//   return `
-// <!DOCTYPE html>
-// <html lang="en">
-// <head>
-//   <meta charset="UTF-8">
-//   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-//   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-//   <title>Document</title>
-// </head>
-// <body>
-//   <div class="jumbotron jumbotron-fluid">
-//   <div class="container">
-//     <h1 class="display-4">Hi! My name is ${answers.name}</h1>
-//     <p class="lead">I am from ${answers.location}.</p>
-//     <h3>Example heading <span class="badge badge-secondary">Contact Me</span></h3>
-//     <ul class="list-group">
-//       <li class="list-group-item">My GitHub username is ${answers.github}</li>
-//       <li class="list-group-item">LinkedIn: ${answers.linkedin}</li>
-//     </ul>
-//   </div>
-// </div>
-// </body>
-// </html>`;
-// }
-
-// async function init() {
-//   console.log("hi")
-//   try {
-//     const answers = await promptUser();
-
-//     const html = generateHTML(answers);
-
-//     await writeFileAsync("index.html", html);
-
-//     console.log("Successfully wrote to index.html");
-//   } catch(err) {
-//     console.log(err);
-//   }
-// }
-
-// init();
