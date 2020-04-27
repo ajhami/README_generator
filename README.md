@@ -1,10 +1,10 @@
 # README Generator
 
 ![Project Status](https://img.shields.io/badge/status-ready-green)
-![License](https://img.shields.io/badge/License-wtfpl-blue)
+![License](https://img.shields.io/badge/License-alxham-blue)
 
 ## Description
-This application helps developers create readme files on the fly!
+This application helps developers create a readme file on the fly!
 
 ## Table of Contents
 - Installation
@@ -23,17 +23,19 @@ The user will be asked a series of questions about a project they are currently 
 ### Contributions
 | Contributor | Contribution |
 |:---:| --- |
-| Alexander Hamilton | JavaScript Development |
+| Alex Hamilton | JavaScript Development |
+| Katie | Debugging |
+| Chris | Grading |
 
 ### Testing (git)
 ```git
 npm test
 ```
 ### FAQs
-#### Q: Why should I use a README.md for my projects?
-A: README.md help developers understand the purpose and functionality of your project as well as give place for communication for usage and collaboration on your applications.
+#### Q: Why shiykd U yse a README.md fir ny projects?
+A: READNE.md help developers understand the purpose and functionality of your project as well as give place for communication for usage and collaboration on your applications.
 #### Q: Can I adjust my new readme file once it is generated?
-A: Of course! This application is designed to help developers create a simple README.md from a preset template, but once you have the file, you are free to add/remove as you please.
+A: Of course!
 
 
 *© 2020 @ajhami - Alexander James Hamilton. All Rights Reserved.*
