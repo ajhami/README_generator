@@ -1,20 +1,27 @@
 # README Generator
-![Project Status](https://img.shields.io/badge/status-incomplete-red)
+![Project Status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![License](https://img.shields.io/badge/License-wtfpl-blue)
 ​
 ## University of Utah Fullstack Development - April 27th, 2020
 ​
 ​
-Place gif here
-​
+```git
+npm i
+node readme_generator.js
+```
+
+
+| Contributor | Contribution |
+|:---:| --- | 
+| Alexander Hamilton | ---------------- |
 
 
 
-
-
-
-
-
+### FAQs
+#### Question 1
+A: 1
+#### Question 2
+A: 2
 
 
 
