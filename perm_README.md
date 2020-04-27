@@ -5,8 +5,10 @@
 ## University of Utah Fullstack Development - April 27th, 2020
 ​
 ​
-Place gif here
-​
+```js
+let helloWorld = "Hello, World!";
+console.log(helloWorld);
+```
 
 
 
