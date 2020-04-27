@@ -17,7 +17,11 @@ node readme_generator.js
 
 
 
-
+### FAQs
+#### Question 1
+A: 1
+#### Question 2
+A: 2
 
 
 
