@@ -11,8 +11,8 @@ node readme_generator.js
 ```
 
 
-| Contributor        | Contribution     |
-|:------------------:| ---------------- | 
+| Contributor | Contribution |
+|:---:| --- | 
 | Alexander Hamilton | ---------------- |
 
 
