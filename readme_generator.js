@@ -149,125 +149,153 @@ async function init() {
         if(tableOfContents.contents.length > 0) {
             console.log("Contents selected! Count = ", tableOfContents.contents.length);
             // await appendTOCLines(tableOfContents.contents);
+            if(tableOfContents.contents.indexOf(contentSelections[0]) >= 0) {
+                console.log(contentSelections[0], " selected.");
+            }
+            if(tableOfContents.contents.indexOf(contentSelections[1]) >= 0) {
+                console.log(contentSelections[1], " selected.");
+            }
+            if(tableOfContents.contents.indexOf(contentSelections[2]) >= 0) {
+                console.log(contentSelections[2], " selected.");
+            }
+            if(tableOfContents.contents.indexOf(contentSelections[3]) >= 0) {
+                console.log(contentSelections[3], " selected.");
+            }
+            if(tableOfContents.contents.indexOf(contentSelections[4]) >= 0) {
+                console.log(contentSelections[4], " selected.");
+            }
+
         }
 
 
         // INSTALLATION
-        console.log("\x1b[34m%s\x1b[0m", "\n\nINSTALLATION");
-        console.log("\x1b[36m%s\x1b[0m", "Provide other users with the proper\ninstallation instructions to run your project\n");
-        const installSelect = await installEnvironmentList.ask();
-        let installEnvironment = installSelect.environment;
-        console.log("install environment = ", installEnvironment);
-
-        if(installEnvironment === "other") {
-            const installInput = await installEnvironmentInput.ask();
-            installEnvironment = installInput.environment;
+        if(tableOfContents.contents.indexOf(contentSelections[0]) >= 0) {
+            console.log("\x1b[34m%s\x1b[0m", "\n\nINSTALLATION");
+            console.log("\x1b[36m%s\x1b[0m", "Provide other users with the proper\ninstallation instructions to run your project\n");
+            const installSelect = await installEnvironmentList.ask();
+            let installEnvironment = installSelect.environment;
+            console.log("install environment = ", installEnvironment);
+    
+            if(installEnvironment === "other") {
+                const installInput = await installEnvironmentInput.ask();
+                installEnvironment = installInput.environment;
+            }
+    
+            let addInstallBlock = "Yes, please!";
+            const installationBlocks = [];
+    
+            while(addInstallBlock === "Yes, please!") {
+                let installInstructions = await installationInput.ask();
+                installationBlocks.push(installInstructions.instructions);
+                let continueInstallBlocks = await addInstallBlocksList.ask();
+                addInstallBlock = continueInstallBlocks.response;
+            }
+    
+            if(installationBlocks.length > 0) {
+                console.log("Installation instructions recorded!");
+                console.log("install = ", installationBlocks);
+                
+                // await appendInstallationLines(installationBlocks);
+            }
         }
 
-        let addInstallBlock = "Yes, please!";
-        const installationBlocks = [];
-
-        while(addInstallBlock === "Yes, please!") {
-            let installInstructions = await installationInput.ask();
-            installationBlocks.push(installInstructions.instructions);
-            let continueInstallBlocks = await addInstallBlocksList.ask();
-            addInstallBlock = continueInstallBlocks.response;
-        }
-
-        if(installationBlocks.length > 0) {
-            console.log("Installation instructions recorded!");
-            console.log("install = ", installationBlocks);
-            
-            // await appendInstallationLines(installationBlocks);
-        }
 
         // USAGE
-        console.log("\x1b[34m%s\x1b[0m", "\n\nUSAGE");
-        console.log("\x1b[36m%s\x1b[0m", "The usage section will help users understand the practical execution of your application.\n");
-        const usageDescription = await usageInput.ask();
-        console.log("Usage = ", usageDescription.instructions);
-        if(usageDescription.instructions > 0) {
-            
-            // await appendUsageLines(usageDescription.instructions);
+        if(tableOfContents.contents.indexOf(contentSelections[1]) >= 0) {
+            console.log("\x1b[34m%s\x1b[0m", "\n\nUSAGE");
+            console.log("\x1b[36m%s\x1b[0m", "The usage section will help users understand the practical execution of your application.\n");
+            const usageDescription = await usageInput.ask();
+            console.log("Usage = ", usageDescription.instructions);
+            if(usageDescription.instructions > 0) {
+                
+                // await appendUsageLines(usageDescription.instructions);
+            }
         }
 
 
         // CONTRIBUTORS
-        console.log("\x1b[34m%s\x1b[0m", "\n\nCONTRIBUTORS");
-        console.log("\x1b[36m%s\x1b[0m", "You will be prompted to add the names of contributors to\nthis project then describe their contributions.\n");
-
-        const contributorName = [];
-        const contribution = [];
-        let addContributor = "";
-
-
-        while(addContributor.response != "No, thank you."){
-            let addName = await addContributorInput.ask();
-            contributorName.push(addName.name);
-            let addDescription = await addContributionInput.ask();
-            contribution.push(addDescription.description);
-
-            addContributor = await addContributorList.ask();
+        if(tableOfContents.contents.indexOf(contentSelections[2]) >= 0) {
+            console.log("\x1b[34m%s\x1b[0m", "\n\nCONTRIBUTORS");
+            console.log("\x1b[36m%s\x1b[0m", "You will be prompted to add the names of contributors to\nthis project then describe their contributions.\n");
+    
+            const contributorName = [];
+            const contribution = [];
+            let addContributor = "";
+    
+    
+            while(addContributor.response != "No, thank you."){
+                let addName = await addContributorInput.ask();
+                contributorName.push(addName.name);
+                let addDescription = await addContributionInput.ask();
+                contribution.push(addDescription.description);
+    
+                addContributor = await addContributorList.ask();
+            }
+    
+            console.log("Contributors properly saved!");
+            console.log("Contributors = ", contributorName);
+            console.log("Contributions = ", contribution);
+            // await appendContributorsLines(contributorName, contribution);
         }
-
-        console.log("Contributors properly saved!");
-        console.log("Contributors = ", contributorName);
-        console.log("Contributions = ", contribution);
-        // await appendContributorsLines(contributorName, contribution);
 
 
         // TESTS
-        console.log("\x1b[34m%s\x1b[0m", "\n\nTESTS");
-        console.log("\x1b[36m%s\x1b[0m", "Provide other users with the proper\n instructions for running tests on your project\n");
-        const testSelect = await testEnvironmentList.ask();
-        let testEnvironment = testSelect.environment;
-        console.log("test environment = ", testEnvironment);
-
-        if(testEnvironment === "other") {
-            const testInput = await testEnvironmentInput.ask();
-            testEnvironment = testInput.environment;
-        }
-
-        let addTestBlock = "Yes, please!";
-        const testBlocks = [];
-
-        while(addTestBlock === "Yes, please!") {
-            let testInstructions = await testInput.ask();
-            testBlocks.push(testInstructions.instructions);
-            let continueTestBlocks = await addTestBlocksList.ask();
-            addTestBlock = continueTestBlocks.response;
-        }
-
-        if(testBlocks.length > 0) {
-            console.log("Test instructions recorded!");
-            console.log("test = ", testBlocks);
-            
-            // await appendTestLines(testBlocks);
+        if(tableOfContents.contents.indexOf(contentSelections[3]) >= 0) {
+            console.log("\x1b[34m%s\x1b[0m", "\n\nTESTS");
+            console.log("\x1b[36m%s\x1b[0m", "Provide other users with the proper\n instructions for running tests on your project\n");
+            const testSelect = await testEnvironmentList.ask();
+            let testEnvironment = testSelect.environment;
+            console.log("test environment = ", testEnvironment);
+    
+            if(testEnvironment === "other") {
+                const testInput = await testEnvironmentInput.ask();
+                testEnvironment = testInput.environment;
+            }
+    
+            let addTestBlock = "Yes, please!";
+            const testBlocks = [];
+    
+            while(addTestBlock === "Yes, please!") {
+                let testInstructions = await testInput.ask();
+                testBlocks.push(testInstructions.instructions);
+                let continueTestBlocks = await addTestBlocksList.ask();
+                addTestBlock = continueTestBlocks.response;
+            }
+    
+            if(testBlocks.length > 0) {
+                console.log("Test instructions recorded!");
+                console.log("test = ", testBlocks);
+                
+                // await appendTestLines(testBlocks);
+            }
         }
 
 
         // FAQ
-        console.log("\x1b[34m%s\x1b[0m", "\n\nFAQs");
-        console.log("\x1b[36m%s\x1b[0m", "Input a common question about your project,\nthen you will be asked to add an answer.\n");
-
-        const questions = [];
-        const answers = [];
-
-        let addFAQ = "";
-
-        while(addFAQ.response != "I'm good, thanks!"){
-            let addQuestion = await addQuestionInput.ask();
-            questions.push(addQuestion.question);
-            let addAnswer = await addAnswerInput.ask();
-            answers.push(addAnswer.answer);
-
-            addFAQ = await addFAQList.ask();
+        if(tableOfContents.contents.indexOf(contentSelections[4]) >= 0) {
+            console.log("\x1b[34m%s\x1b[0m", "\n\nFAQs");
+            console.log("\x1b[36m%s\x1b[0m", "Input a common question about your project,\nthen you will be asked to add an answer.\n");
+    
+            const questions = [];
+            const answers = [];
+    
+            let addFAQ = "";
+    
+            while(addFAQ.response != "I'm good, thanks!"){
+                let addQuestion = await addQuestionInput.ask();
+                questions.push(addQuestion.question);
+                let addAnswer = await addAnswerInput.ask();
+                answers.push(addAnswer.answer);
+    
+                addFAQ = await addFAQList.ask();
+            }
+    
+            console.log("Questions and Answers properly saved!");
+            console.log("Questions = ", questions);
+            console.log("answers = ", answers);
+            // await appendFAQLines(questions, answers);
         }
 
-        console.log("Questions and Answers properly saved!");
-        console.log("Questions = ", questions);
-        console.log("answers = ", answers);
-        // await appendFAQLines(questions, answers);
 
 
     } catch(err) {
