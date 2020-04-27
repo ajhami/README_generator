@@ -5,9 +5,9 @@
 ## University of Utah Fullstack Development - April 27th, 2020
 ​
 ​
-```js
-let helloWorld = "Hello, World!";
-console.log(helloWorld);
+```git
+npm i
+node readme_generator.js
 ```
 
 
