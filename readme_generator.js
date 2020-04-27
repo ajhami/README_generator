@@ -83,6 +83,92 @@ const addTestBlocksList = new ListPrompt("response", "Would you like to add anot
 const addFAQList = new ListPrompt("response", "Would you like to add another FAQ?", yesPleaseOrNo, "list");
 
 
+// README Text Input Functions
+projectNameLine = projectName => {    
+    return `# ${projectName}
+
+`;
+};
+
+projectStatusBadge = projectStatus => {
+    if(projectStatus === "Incomplete") {
+        return `![Project Status](https://img.shields.io/badge/status-incomplete-red)`;
+    }
+    else if(projectStatus === "In Progress") {
+        return `![Project Status](https://img.shields.io/badge/status-in%20progress-yellow)`;
+    }
+    else {
+        return `![Project Status](https://img.shields.io/badge/status-ready-green)`;
+    }
+
+};
+
+projectLicenseBadge = projectLicense => {
+    return `
+![License](https://img.shields.io/badge/License-${projectLicense}-blue)`
+};
+
+projectDescriptionLines = projectDescription => {
+    return `
+
+## Description
+${projectDescription}
+
+`
+};
+
+tableOfContentsSection = contentsSelected => {
+    let tableOfContentsLines = "## Table of Contents\n";
+    for(content in contentsSelected) {
+        tableOfContentsLines = tableOfContentsLines + "- " + contentsSelected[content] + "\n";
+    }
+    return tableOfContentsLines;
+}
+
+installationLines = (environment, installationBlocks) => {
+    let installLines = "\n### Installation (" + environment + ")\n";
+    installLines = installLines + "```" + environment + "\n";
+    for(block in installationBlocks) {
+        installLines = installLines + installationBlocks[block] + "\n";
+    }
+    installLines = installLines + "```";
+    return installLines;
+}
+
+projectUsageLines = projectUsage => {
+    return `
+### Usage
+${projectUsage}
+
+`
+};
+
+contributorsSection = (contributors, contributions) => {
+    let contributionText = "### Contributions\n| Contributor | Contribution |\n|:---:| --- |\n";
+    for(number in contributors) {
+        contributionText = contributionText + `| ${contributors[number]} | ${contributions[number]} |\n`
+    }
+    return contributionText;
+}
+
+testLines = (environment, testBlocks) => {
+    let testLines = "\n### Testing (" + environment + ")\n";
+    testLines = testLines + "```" + environment + "\n";
+    for(block in testBlocks) {
+        testLines = testLines + testBlocks[block] + "\n";
+    }
+    testLines = testLines + "```";
+    return testLines;
+}
+
+faqSection = (questions, answers) => {
+    let faqText = "\n### FAQs\n";
+    for(number in questions) {
+        faqText = faqText + `#### Q: ${questions[number]}\nA: ${answers[number]}\n`
+    }
+    return faqText;
+}
+
 // init function
 async function init() {
 
@@ -100,6 +186,11 @@ async function init() {
             console.log("Please enter a valid project project name!\n");
             userProjectName = await projectNameInput.ask();
         }
+
+        const writeProjectName = projectNameLine(userProjectName.projectName);
+        console.log("WriteProjectName = ", writeProjectName);
+
+        await writeFileAsync("README.md", writeProjectName);
         // await appendNameLine(userProjectName.projectName);
 
 
@@ -107,19 +198,16 @@ async function init() {
         const userStatus = await statusList.ask();
         console.log("Status = ", userStatus.status);
         // await appendStatusLine(userStatus.status);
+        const writeProjectStatus = projectStatusBadge(userStatus.status);
+        console.log("WriteProjectStatus = ", writeProjectStatus);
 
-
-        // DESCRIPTION
-        const userDescription = await descriptionInput.ask();
-        console.log("Description = ", userDescription.description);
-        if(userDescription.description != "") {
-            console.log("Description found!");
-            // await appendDescriptionLines(userDescription.description);
-        }
+        await appendFileAsync("README.md", writeProjectStatus);
 
 
         // LICENSE
         const userLicense = await licenseList.ask();
+
+        let writeProjectLicense = "";
 
         if(userLicense.license === "none") {
             console.log("User selects to not use a license");
@@ -129,7 +217,8 @@ async function init() {
             const otherLicense = await licenseInput.ask();
             if(otherLicense.license != "") {
                 console.log("User inputs a license");
-                // await appendLicenseLine(otherLicense.license);
+                writeProjectLicense = projectLicenseBadge(otherLicense.license);
+                await appendFileAsync("README.md", writeProjectLicense);
             }
             console.log("Success!\nUser's project name = ", userProjectName.projectName);
             console.log("License = ", otherLicense.license);
@@ -138,33 +227,29 @@ async function init() {
             // await appendLicenseLine(userLicense.license);
             console.log("Success!\nUser's project name = ", userProjectName.projectName);
             console.log("License = ", userLicense.license);
+            writeProjectLicense = projectLicenseBadge(userLicense.license);
+            await appendFileAsync("README.md", writeProjectLicense);
         }
 
 
-        // Table of Contents
+        // DESCRIPTION
+        const userDescription = await descriptionInput.ask();
+        console.log("Description = ", userDescription.description);
+        if(userDescription.description != "") {
+            console.log("Description found!");
+            const writeProjectDescription = projectDescriptionLines(userDescription.description);
+            await appendFileAsync("README.md", writeProjectDescription);
+        }
+
+
+        // TABLE OF CONTENTS
         console.log("\x1b[34m%s\x1b[0m", "\n\nTable Of Contents");
         console.log("\x1b[36m%s\x1b[0m", "Now you have the chance to pick which additional\nelements you would like to add to your project README!\n");
         const tableOfContents = await contentSelectionList.ask();
         console.log("table of contents", tableOfContents.contents);
         if(tableOfContents.contents.length > 0) {
-            console.log("Contents selected! Count = ", tableOfContents.contents.length);
-            // await appendTOCLines(tableOfContents.contents);
-            if(tableOfContents.contents.indexOf(contentSelections[0]) >= 0) {
-                console.log(contentSelections[0], " selected.");
-            }
-            if(tableOfContents.contents.indexOf(contentSelections[1]) >= 0) {
-                console.log(contentSelections[1], " selected.");
-            }
-            if(tableOfContents.contents.indexOf(contentSelections[2]) >= 0) {
-                console.log(contentSelections[2], " selected.");
-            }
-            if(tableOfContents.contents.indexOf(contentSelections[3]) >= 0) {
-                console.log(contentSelections[3], " selected.");
-            }
-            if(tableOfContents.contents.indexOf(contentSelections[4]) >= 0) {
-                console.log(contentSelections[4], " selected.");
-            }
-
+            const writeTableOfContents = tableOfContentsSection(tableOfContents.contents);
+            await appendFileAsync("README.md", writeTableOfContents);
         }
 
 
@@ -192,9 +277,8 @@ async function init() {
             }
     
             if(installationBlocks.length > 0) {
-                console.log("Installation instructions recorded!");
-                console.log("install = ", installationBlocks);
-                
+                const writeInstallBlocks = installationLines(installEnvironment, installationBlocks);
+                await appendFileAsync("README.md", writeInstallBlocks);
                 // await appendInstallationLines(installationBlocks);
             }
         }
@@ -206,10 +290,8 @@ async function init() {
             console.log("\x1b[36m%s\x1b[0m", "The usage section will help users understand the practical execution of your application.\n");
             const usageDescription = await usageInput.ask();
             console.log("Usage = ", usageDescription.instructions);
-            if(usageDescription.instructions > 0) {
-                
-                // await appendUsageLines(usageDescription.instructions);
-            }
+            const writeUsage = projectUsageLines(usageDescription.instructions);
+            await appendFileAsync("README.md", writeUsage);
         }
 
 
@@ -235,6 +317,9 @@ async function init() {
             console.log("Contributors properly saved!");
             console.log("Contributors = ", contributorName);
             console.log("Contributions = ", contribution);
+            
+            const contributorsLines = contributorsSection(contributorName, contribution);
+            await appendFileAsync("README.md", contributorsLines);
             // await appendContributorsLines(contributorName, contribution);
         }
 
@@ -265,7 +350,8 @@ async function init() {
             if(testBlocks.length > 0) {
                 console.log("Test instructions recorded!");
                 console.log("test = ", testBlocks);
-                
+                const testText = testLines(testEnvironment, testBlocks);
+                await appendFileAsync("README.md", testText);
                 // await appendTestLines(testBlocks);
             }
         }
@@ -293,6 +379,9 @@ async function init() {
             console.log("Questions and Answers properly saved!");
             console.log("Questions = ", questions);
             console.log("answers = ", answers);
+
+            const faqLines = faqSection(questions, answers);
+            await appendFileAsync("README.md", faqLines);
             // await appendFAQLines(questions, answers);
         }
 
