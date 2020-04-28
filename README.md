@@ -1,7 +1,7 @@
 # README Generator
 
 ![Project Status](https://img.shields.io/badge/status-ready-green)
-![License](https://img.shields.io/badge/License-alxham-blue)
+![License](https://img.shields.io/badge/License-mit-blue)
 
 ## Description
 This application helps developers create a readme file on the fly! This read me was created by the application (readme_generator.js) and exemplifies its functionality. (Some information layed out in this README serves as placeholders and may not be accurate to this project.)
