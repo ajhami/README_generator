@@ -206,7 +206,6 @@ async function init() {
         // STATUS
         const userStatus = await statusList.ask();
         const writeProjectStatus = projectStatusBadge(userStatus.status);
-        console.log("WriteProjectStatus = ", writeProjectStatus);
         await appendFileAsync("README.md", writeProjectStatus);
 
 
