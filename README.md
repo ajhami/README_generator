@@ -32,7 +32,7 @@ The user will be asked a series of questions about a project they are currently 
 npm test
 ```
 ### FAQs
-#### Q: Why should I use a README.md for ny projects?
+#### Q: Why should I use a README.md for my projects?
 A: README.md help developers understand the purpose and functionality of your project as well as give place for communication for usage and collaboration on your applications.
 #### Q: Can I adjust my new readme file once it is generated?
 A: Of course!
