@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/License-alxham-blue)
 
 ## Description
-This application helps developers create a readme file on the fly!
+This application helps developers create a readme file on the fly! This read me was created by the application (readme_generator.js) and exemplifies its functionality. (Some information layed out in this README serves as placeholders and may not be accurate to this project.)
 
 ## Table of Contents
 - Installation
@@ -32,8 +32,8 @@ The user will be asked a series of questions about a project they are currently 
 npm test
 ```
 ### FAQs
-#### Q: Why shiykd U yse a README.md fir ny projects?
-A: READNE.md help developers understand the purpose and functionality of your project as well as give place for communication for usage and collaboration on your applications.
+#### Q: Why should I use a README.md for ny projects?
+A: README.md help developers understand the purpose and functionality of your project as well as give place for communication for usage and collaboration on your applications.
 #### Q: Can I adjust my new readme file once it is generated?
 A: Of course!
 
