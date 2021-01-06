@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/ajhami/README_generator#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "inquirer": "^7.1.0"
   }
 }
